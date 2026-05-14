@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Rahasia Emoji</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 { color: #333; }
+
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        textarea:focus, input:focus {
+            border-color: #6c5ce7;
+            outline: none;
+        }
+
+        .output-box {
+            background: #f9f9f9;
+            border: 1px dashed #aaa;
+            padding: 15px;
+            min-height: 50px;
+            word-wrap: break-word;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+        }
+
+        .label {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: left;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #ff7675;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🕵️ Pengirim Pesan Rahasia</h2>
+    
+    <span class="label">Tulis pesanmu:</span>
+    <textarea id="inputPesan" placeholder="Ketik sesuatu di sini..." rows="3"></textarea>
+
+    <div class="output-box" id="hasilEmoji">✨ Menunggu pesan...</div>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+    <span class="label">Masukkan Kata Kunci untuk membaca:</span>
+    <input type="text" id="kataKunci" placeholder="Ketik 'Kata Kunci'...">
+    
+    <div class="output-box" id="hasilAsli" style="color: #6c5ce7; font-weight: bold;">🔒 Terkunci</div>
+</div>
+
+<script>
+    const inputPesan = document.getElementById('inputPesan');
+    const hasilEmoji = document.getElementById('hasilEmoji');
+    const kataKunci = document.getElementById('kataKunci');
+    const hasilAsli = document.getElementById('hasilAsli');
+
+    // Peta sederhana untuk mengubah karakter Base64 menjadi Emoji
+    const emojiMap = {
+        'A': '🍎', 'B': '🍌', 'C': '🕯️', 'D': '💎', 'E': '🦊', 'F': '🔥', 'G': '🍏', 'H': '🚁',
+        'I': '🍦', 'J': '🕹️', 'K': '🔑', 'L': '🍭', 'M': '🌙', 'N': '🔔', 'O': '🐙', 'P': '🍕',
+        'Q': '👑', 'R': '🚀', 'S': '☀️', 'T': '🦖', 'U': '🦄', 'V': '🌋', 'W': '🌊', 'X': '❌',
+        'Y': '🧶', 'Z': '⚡', 'a': '🐜', 'b': '🎈', 'c': '🐱', 'd': '🐕', 'e': '🥚', 'f': '🎏',
+        'g': '🎁', 'h': '🏠', 'i': 'ℹ️', 'j': '🃏', 'k': '🪁', 'l': '🍃', 'm': '🍄', 'n': '📝',
+        'o': '🦉', 'p': '🍍', 'q': '❓', 'r': '🌈', 's': '🍓', 't': '🍵', 'u': '☂️', 'v': '🎻',
+        'w': '🍉', 'x': '👾', 'y': '🟡', 'z': '💤', '0': '0️⃣', '1': '1️⃣', '2': '2️⃣', '3': '3️⃣',
+        '4': '4️⃣', '5': '5️⃣', '6': '6️⃣', '7': '7️⃣', '8': '8️⃣', '9': '9️⃣', '+': '➕', '/': '🎢', '=': '🧱'
+    };
+
+    // Fungsi mengubah teks ke kode emoji
+    inputPesan.addEventListener('input', () => {
+        const teks = inputPesan.value;
+        if (teks.length === 0) {
+            hasilEmoji.innerText = "✨ Menunggu pesan...";
+            return;
+        }
+
+        // Encode ke Base64 terlebih dahulu
+        const base64 = btoa(unescape(encodeURIComponent(teks)));
+        
+        // Ubah setiap karakter Base64 ke emoji
+        let stringEmoji = "";
+        for (let char of base64) {
+            stringEmoji += emojiMap[char] || char;
+        }
+        
+        hasilEmoji.innerText = stringEmoji;
+        periksaKataKunci();
+    });
+
+    // Fungsi untuk menampilkan pesan asli jika kata kunci benar
+    kataKunci.addEventListener('input', periksaKataKunci);
+
+    function periksaKataKunci() {
+        if (kataKunci.value === "Kata Kunci") {
+            hasilAsli.innerText = inputPesan.value || "Kosong";
+        } else {
+            hasilAsli.innerText = "🔒 Terkunci";
+        }
+    }
+</script>
+
+</body>
+</html>
